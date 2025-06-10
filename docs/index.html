@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Generative Modeling of Weights: Generalization or Memorization?">
+  <meta name="keywords" content="weight generation, memorization, generative modeling">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Generative Modeling of Weights: Generalization or Memorization?</title>
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="data:,">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Generative Modeling of Weights:<br>Generalization or Memorization?</h1>
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+              <a href="https://boyazeng.github.io">Boya Zeng</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://davidyyd.github.io/">Yida Yin</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="https://oscarxzq.github.io/">Zhiqiu Xu</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="https://www.cs.princeton.edu/~zhuangl">Zhuang Liu</a><sup>1</sup>
+            </span>
+          </div>
+
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Princeton University</span>,
+            <span class="author-block"><sup>2</sup>University of Pennsylvania</span><br>
+          </div>
+
+          <div class="column has-text-centered">
+            <div class="publication-links">
+              <!-- PDF Link. -->
+              <span class="link-block">
+                <a href="https://arxiv.org/pdf/2506.07998"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fas fa-file-pdf"></i>
+                  </span>
+                  <span>Paper</span>
+                </a>
+              </span>
+              <span class="link-block">
+                <a href="https://arxiv.org/abs/2506.07998"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="ai ai-arxiv"></i>
+                  </span>
+                  <span>arXiv</span>
+                </a>
+              </span>
+              <!-- Video Link. -->
+              <span class="link-block">
+                <a href="https://www.youtube.com/watch?v=3OGGjh4fPwA"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-youtube"></i>
+                  </span>
+                  <span>Video</span>
+                </a>
+              </span>
+              <!-- Code Link. -->
+              <span class="link-block">
+                <a href="https://github.com/boyazeng/weight_memorization"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="fab fa-github"></i>
+                  </span>
+                  <span>Code</span>
+                  </a>
+              </span>
+            </div>
+
+          </div>
+          <br>
+          <div class="columns is-centered">
+            <div class="column is-full">
+              <img src="./static/images/teaser.png" style="max-width: 100%; height: auto;" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <!-- Abstract. -->
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+        <h2 class="title is-3">Abstract</h2>
+        <div class="content has-text-justified">
+          <p>
+            Generative models, with their success in image and video generation, have recently been explored for synthesizing effective neural network weights. These approaches take trained neural network checkpoints as training data, and aim to generate high-performing neural network weights during inference. In this work, we examine four representative methods on their ability to generate <i>novel</i> model weights, i.e., weights that are different from the checkpoints seen during training. Surprisingly, we find that these methods synthesize weights largely by memorization: they produce either replicas, or at best simple interpolations, of the training checkpoints. Current methods fail to outperform simple baselines, such as adding noise to the weights or taking a simple weight ensemble, in obtaining different and simultaneously high-performing models. We further show that this memorization cannot be effectively mitigated by modifying modeling factors commonly associated with memorization in image diffusion models, or applying data augmentations. Our findings provide a realistic assessment of what types of data current generative models can model, and highlight the need for more careful evaluation of generative models in new domains.
+          </p>
+        </div>
+      </div>
+    </div>
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+
+<section class="section">
+  <div class="container is-max-desktop">
+
+    
+    <div class="columns is-centered">
+      <div class="column is-full">
+        <h2 class="title is-3 has-text-centered">Background: Generative Modeling of Weights</h2>
+      </div>
+    </div>
+    <p>
+      Building on the success of generative models in image and video synthesis, recent studies have applied them to synthesize weights for neural networks.
+      These methods collect network checkpoints trained with standard gradient-based optimization,
+      and apply generative models to learn the weight distributions and produce new checkpoints,
+      that often perform comparably to conventionally trained weights.
+    </p>
+    <br>
+    <div class="columns is-centered">
+      <div class="column is-full has-text-centered">
+        <p style="font-size: larger;">
+          To understand the fundamental mechanisms and the practicality of these methods, we wonder:<br>
+          <span style="color: red;">have the generative models learned to produce distinct weights that <strong style="color: red;">generalize</strong> beyond the training ones<br>
+            or do they merely <strong style="color: red;">memorize</strong> and reproduce the training data?</span>
+        </p>
+      </div>
+    </div>
+    <p class="has-text-centered">
+      We analyze four representative methods, covering different types of generative models and downstream tasks:
+    </p>
+    <br>
+    <div class="columns is-centered">
+      <!-- Hyper-Representations -->
+      <div class="column">
+        <div class="content">
+          <h3 class="title is-4 has-text-centered"><a href="https://arxiv.org/abs/2209.14733">Hyper-Representations</a></h3>
+          <p>
+            Hyper-Representations trains an autoencoder on classification model weights from different runs with identical architectures,
+            fits their latents using KDE,
+            and samples from the fitted distribution.
+          </p>
+        </div>
+      </div>
+      <!--/ Hyper-Representations -->
+
+      <!-- G.pt -->
+      <div class="column">
+        <h3 class="title is-4 has-text-centered"><a href="https://arxiv.org/abs/2209.12892">G.pt</a></h3>
+        <div class="columns is-centered">
+          <div class="column content">
+            <p>
+              G.pt is a conditional diffusion model trained on checkpoints from tens of thousands of runs.
+              It generates weights for a small predefined model, given initial weights and a target loss.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!--/ G.pt -->
+    </div>
+    <div class="columns is-centered">
+      <!-- HyperDiffusion -->
+      <div class="column">
+        <div class="content">
+          <h3 class="title is-4 has-text-centered"><a href="https://arxiv.org/abs/2303.17015">HyperDiffusion</a></h3>
+          <p>
+            HyperDiffusion is an unconditional diffusion model trained on neural field MLPs representing 3D shapes.
+            It generates new weights from which meshes can be reconstructed.
+          </p>
+        </div>
+      </div>
+      <!--/ HyperDiffusion -->
+
+      <!-- P-diff -->
+      <div class="column">
+        <h3 class="title is-4 has-text-centered"><a href="https://arxiv.org/abs/2402.13144">P-diff</a></h3>
+        <div class="columns is-centered">
+          <div class="column content">
+            <p>
+              P-diff trains an unconditional latent diffusion model on 300 checkpoints saved at consecutive steps during an extra training epoch of a base classification model,
+              after it has converged.
+            </p>
+          </div>
+        </div>
+      </div>
+      <!--/ P-diff -->
+    </div>
+
+    <hr>
+
+    <!-- Memorization in Weight Space -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Memorization in Weight Space</h2>
+
+        <div class="content">
+          <p>
+            A natural first step in evaluating the novelty of generated weights is to find the nearest training weights to each generated checkpoint, and check for replications in <i>weight values</i>.
+          </p>
+        </div>
+        
+        <!-- Weight heatmap -->
+        <h3 class="title is-4">Weight heatmap</h3>
+        <div class="content has-text-justified">
+          <div style="text-align: center;">
+            <img src="./static/images/heatmap.png" style="max-width: 85%; height: auto;">
+          </div>
+          <p>
+            We use heatmaps to visualize the model weights at randomly selected parameter indices. In each heatmap, the top row (outlined in red) is a random generated checkpoint,
+            and the three rows below (separated by white lines) are the three nearest training checkpoints.
+            We observe that <b>for every generated checkpoint, at least one training checkpoint is nearly identical to it</b>.
+          </p>
+        </div>
+        <!--/ Weight heatmap -->
+        
+        <!-- Distance to training weights -->
+        <h3 class="title is-4">Distance to training weights</h3>
+        <div class="content has-text-justified">
+          <div style="text-align: center;">
+            <img src="./static/images/min_distance_to_training.png" style="max-width: 85%; height: auto;">
+          </div>
+          <p>
+            We visualize the distribution of the distance from each training and generated checkpoint to its nearest training checkpoint.
+            For all methods except p-diff, the generated checkpoints are significantly closer to the training checkpoints than training checkpoints are to one another.
+            This indicates that <b>these methods produce models with lower novelty than training a new model from scratch</b>.
+          </p>
+        </div>
+        <!--/ Distance to training weights -->
+      </div>
+    </div>
+    <!--/ Memorization in Weight Space -->
+
+    <hr>
+
+    <!-- Memorization in Model Behaviors -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Memorization in Model Behaviors</h2>
+
+        <div class="content">
+          <p>
+            Beyond similarity in weight space,
+            we also compare the <i>behaviors</i> of generated models to the <i>behaviors</i> of their nearest training models,
+            and assess whether generative modeling methods differ from a simple noise-addition baseline for creating new weights.
+          </p>
+        </div>
+        
+        <!-- Model outputs -->
+        <h3 class="title is-4">Model outputs</h3>
+        <div class="content has-text-justified">
+          <div style="text-align: center;">
+            <img src="./static/images/decision_boundary.png" style="max-width: 85%; height: auto;">
+          </div>
+          <p>
+            We show the decision boundaries or reconstructed 3D shapes of randomly selected generated checkpoints and their nearest training checkpoints.
+            The generated and nearest training models produce highly similar predictions in image classification, or reconstruct to nearly identical 3D shapes.
+            This suggests that <b>generated weights also closely resemble training weights in model behaviors</b>.
+          </p>
+        </div>
+        <!--/ Model outputs -->
+        
+        <!-- Accuracy-novelty trade-off -->
+        <h3 class="title is-4">Accuracy-novelty trade-off</h3>
+        <div class="content has-text-justified">
+          <div style="text-align: center;">
+            <img src="./static/images/performance_vs_novelty.png" style="max-width: 85%; height: auto;">
+          </div>
+          <p>
+            We evaluate generated checkpoints by test accuracy (higher is better) for classification models and point cloud distance to test shapes (lower is better) for neural fields.
+            Novelty is measured by maximum prediction error similarity to training checkpoints (lower is better) or point cloud distance to training shapes (higher is better).
+            We compare them to a simple baseline that adds noise to training weights.
+            <b>All methods except p-diff fail to outperform this baseline in obtaining novel and simultaneously high-performing models</b>.
+          </p>
+        </div>
+        <!--/ Accuracy-novelty trade-off -->
+      </div>
+    </div>
+    <!--/ Memorization in Model Behaviors -->
+
+    <hr>
+
+    <!-- Understanding P-diff's Accuracy-Novelty Trade-off -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-5 has-text-centered">Understanding P-diff's Accuracy-Novelty Trade-off</h2>
+
+        <div class="content">
+          <p>
+            Different from the other methods, p-diff's training checkpoints are saved at consecutive training steps rather than from different training runs.
+            We seek to understand why p-diff can outperform the noise-addition baseline in the accuracy-novelty trade-off.
+          </p>
+        </div>
+        
+        <div class="content has-text-justified">
+          <div style="text-align: center;">
+            <img src="./static/images/param_value_distribution.png" style="max-width: 85%; height: auto;">
+          </div>
+          <p>
+            P-diff's generated weight values concentrate around the average of training values.
+            Averaging weights of models fine-tuned from the same base model is <a href="https://arxiv.org/abs/2203.05482">known to improve accuracy</a>.
+            The generated models may achieve higher accuracy by interpolating training weights.
+          </p>
+        </div>
+
+        <div class="columns is-centered">
+          <div class="column">
+            <div class="content">
+              <div style="text-align: center;">
+                <p>accuracy-novelty trade-off</p>
+              </div>
+              <div style="text-align: center;">
+                <img src="./static/images/performance_vs_novelty_interpolate.png" style="max-width: 85%; height: auto;">
+              </div>
+            </div>
+          </div>
+    
+          <div class="column">
+            <div class="content">
+              <div style="text-align: center;">
+                <p>t-SNE of weight values</p>
+              </div>
+              <div style="text-align: center;">
+                <img src="./static/images/tsne_interpolate.png" style="max-width: 85%; height: auto;">
+              </div>
+            </div>
+          </div>
+        </div>
+        We generate new models using two baselines ("averaged" and "gaussian") that approximate interpolations of training weights.
+        We find that both the weight values and behaviors of the generated models closely match those of models from the interpolation baselines.
+      </div>
+    </div>
+    <!--/ Understanding P-diff's Accuracy-Novelty Trade-off -->
+
+    <hr>
+
+    <!-- Analysis -->
+    <div class="columns is-centered">
+      <div class="column is-full-width">
+        <h2 class="title is-3 has-text-centered">Analysis</h2>
+        
+        <!-- Impact of modeling factors on memorization -->
+        <h3 class="title is-4">Impact of modeling factors on memorization</h3>
+        <div class="content has-text-justified">
+          <div style="text-align: center;">
+            <img src="./static/images/modeling_factors.png" style="max-width: 65%; height: auto;">
+          </div>
+          <p>
+            Using L<sub>2</sub> distance as a proxy for the novelty of generated weights,
+            and classification accuracy or minimum matching distance (MMD) to training shapes as measures of performance,
+            we find that modeling factor adjustments shown to reduce memorization in image diffusion do not alleviate the memorization issue in weight generation: none substantially improved novelty without degrading performance.
+          </p>
+        </div>
+        <!--/ Impact of modeling factors on memorization -->
+        
+        <!-- Weight space symmetries -->
+        <h3 class="title is-4">Weight space symmetries</h3>
+
+        <div class="content">
+          <p>
+            Neural networks have symmetries: certain transformations (e.g., <a href="https://www.sciencedirect.com/science/article/abs/pii/B9780444884008500194">permutation</a> and <a href="https://ieeexplore.ieee.org/document/6796044">scaling</a>) can be applied to the weights <i>without changing the model's behavior</i>.
+            Among the four methods, G.pt and Hyper-Representations leverage permutation symmetry, but only as a form of data augmentation.
+            We evaluate whether such augmentations provide meaningful benefits for generative modeling.
+          </p>
+        </div>
+
+        <div class="content has-text-justified">
+          <div style="text-align: center;">
+            <img src="./static/images/invariance.png" style="max-width: 40%; height: auto;">
+          </div>
+          <p>
+            We apply <i>function-preserving</i> transformations to the training weights,
+            and reconstruct both the original and transformed weights using the Hyper-Representations' autoencoder.
+            The resulting reconstructions highly differ in accuracy and predictions.
+            For reference, we report the average accuracy difference and prediction similarity between <i>different</i> untransformed training models ("original").
+            These results suggest that symmetry-based data augmentation alone is insufficient to train the autoencoder to fully capture weight space symmetries.
+          </p>
+        </div>
+
+        <div class="content has-text-justified">
+          <div style="text-align: center;">
+            <img src="./static/images/hyperdiff_permutation.png" style="max-width: 85%; height: auto;">
+          </div>
+          <p>
+            We add 1, 3, and 7 random weight permutations as data augmentation for training HyperDiffusion, effectively enlarging the dataset by factors of &times;2, &times;4, and &times;8, respectively.
+            Even when we only add a single permutation, HyperDiffusion fails to produce meaningful shapes.
+          </p>
+        </div>
+        <!--/ Weight space symmetries -->
+      </div>
+    </div>
+    <!--/ Analysis -->
+  </div>
+</section>
+
+
+<section class="section" id="BibTeX">
+  <div class="container is-max-desktop content">
+    <h2 class="title">BibTeX</h2>
+    <pre><code>@article{zeng2025generative,
+  title={Generative Modeling of Weights: Generalization or Memorization?},
+  author={Boya Zeng and Yida Yin and Zhiqiu Xu and Zhuang Liu},
+  journal={arXiv preprint arXiv:2506.07998},
+  year={2025},
+}</code></pre>
+  </div>
+</section>
+
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+          <p>
+            This website is licensed under a <a rel="license"
+                                                href="http://creativecommons.org/licenses/by-sa/4.0/">Creative
+            Commons Attribution-ShareAlike 4.0 International License</a>.
+          </p>
+          <p>
+            Website adapted from the following <a
+              href="https://github.com/nerfies/nerfies.github.io">source code</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

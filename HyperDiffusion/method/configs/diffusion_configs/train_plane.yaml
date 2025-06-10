@@ -1,0 +1,56 @@
+method: hyper_3d
+calculate_metric_on_test: True
+dedup: False
+test_sample_mult: 1.1
+filter_bad: True
+filter_bad_path: ./data/plane_problematic_shapes.txt
+disable_wandb: True
+dataset_dir: ./data
+dataset: 02691156
+tensorboard_log_dir: .
+augment: False
+augment_amount: 0
+jitter_augment: False
+normalization_factor: 1
+timesteps: 500
+epochs: 6000
+scheduler: True
+scheduler_step: 200
+best_model_save_path: plane.ckpt
+mode: train
+mlps_folder_train: ./mlp_weights/3d_128_plane_multires_4_manifoldplus_slower_no_clipgrad
+model_resume_path:
+sampling: ddim
+val_fid_calculation_period: 15
+lr: 0.0002
+batch_size: 32
+accumulate_grad_batches: 1
+val:
+  num_points: 2048
+  num_samples: 60
+mlp_config:
+  params:
+    model_type: mlp_3d
+    out_size: 1
+    hidden_neurons:
+      - 128
+      - 128
+      - 128
+    output_type: occ
+    out_act: sigmoid
+    multires: 4
+    use_leaky_relu: False
+    move: False
+diff_config:
+  params:
+    model_mean_type: START_X
+    model_var_type: FIXED_LARGE
+    loss_type: MSE
+transformer_config:
+  params:
+    n_embd: 2880
+    n_layer: 12
+    n_head: 16
+    split_policy: layer_by_layer
+    use_global_residual: False
+    condition: 'no'

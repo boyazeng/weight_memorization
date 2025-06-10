@@ -1,0 +1,14 @@
+/.idea
+/.vscode
+/rubbish
+**/checkpoint*/
+**/generated*/
+**/process*/
+**/__pycache__/
+**/wandb/
+**/pretrained.pth
+**/ensemble.pth
+*.cache
+*.pth
+*.xlsx
+*.png

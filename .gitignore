@@ -1,0 +1,16 @@
+*.pyc
+*.pth
+*log*.txt
+*.png
+*.jpg
+*.jpeg
+.DS_store
+.idea
+*Zone.Identifier
+*.pkl
+
+G.pt/data
+G.pt/vision_datasets
+Hyper-Representations/data
+HyperDiffusion/data
+P-diff/data
