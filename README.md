@@ -2,7 +2,7 @@
 
 Official code for **Generative Modeling of Weights: Generalization or Memorization?**
 
-> [**Generative Modeling of Weights: Generalization or Memorization?**](https://arxiv.org/abs/2506.07998)<br>
+> [**Generative Modeling of Weights: Generalization or Memorization?**](https://arxiv.org/abs/2506.07998), CVPR 2026 (Highlight)<br>
 > [Boya Zeng](https://boyazeng.github.io), [Yida Yin](https://davidyyd.github.io), [Zhiqiu Xu](https://oscarxzq.github.io/), [Zhuang Liu](https://www.cs.princeton.edu/~zhuangl)
 > <br>Princeton University, University of Pennsylvania<br>
 > [[`arXiv`](https://arxiv.org/abs/2506.07998)][[`video`](https://www.youtube.com/watch?v=3OGGjh4fPwA)][[`project page`](https://boyazeng.github.io/weight_memorization/)]
@@ -42,10 +42,10 @@ This repository is built using the [Hyper-Representations](https://github.com/HS
 ## Citation
 If you find this repository helpful, please consider citing:
 ```bibtex
-@article{zeng2025generative,
+@inproceedings{zeng2026generative,
   title={Generative Modeling of Weights: Generalization or Memorization?},
   author={Boya Zeng and Yida Yin and Zhiqiu Xu and Zhuang Liu},
-  journal={arXiv preprint arXiv:2506.07998},
-  year={2025},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  year={2026},
 }
 ```

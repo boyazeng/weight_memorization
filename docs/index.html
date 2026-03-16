@@ -51,6 +51,10 @@
             <span class="author-block"><sup>2</sup>University of Pennsylvania</span><br>
           </div>
 
+          <p>
+            <span class="is-size-5"><b>CVPR 2026 (Highlight)</b><span>
+          </p>
+
           <div class="column has-text-centered">
             <div class="publication-links">
               <!-- PDF Link. -->
@@ -116,7 +120,7 @@
         <h2 class="title is-3">Abstract</h2>
         <div class="content has-text-justified">
           <p>
-            Generative models, with their success in image and video generation, have recently been explored for synthesizing effective neural network weights. These approaches take trained neural network checkpoints as training data, and aim to generate high-performing neural network weights during inference. In this work, we examine four representative methods on their ability to generate <i>novel</i> model weights, i.e., weights that are different from the checkpoints seen during training. Surprisingly, we find that these methods synthesize weights largely by memorization: they produce either replicas, or at best simple interpolations, of the training checkpoints. Current methods fail to outperform simple baselines, such as adding noise to the weights or taking a simple weight ensemble, in obtaining different and simultaneously high-performing models. We further show that this memorization cannot be effectively mitigated by modifying modeling factors commonly associated with memorization in image diffusion models, or applying data augmentations. Our findings provide a realistic assessment of what types of data current generative models can model, and highlight the need for more careful evaluation of generative models in new domains.
+            Generative models have recently been explored for synthesizing neural network weights. These approaches take neural network checkpoints as training data and aim to generate high-performing weights during inference. In this work, we examine four representative, well-known methods on their ability to generate <i>novel</i> model weights, i.e., weights that are different from the checkpoints seen during training. Contrary to claims in prior work, we find that these methods synthesize weights largely by memorization: they produce either replicas, or, at best, simple interpolations of the training checkpoints. Moreover, they fail to outperform simple baselines, such as adding noise to the weights or taking a simple weight ensemble, in obtaining different and simultaneously high-performing models. Our further analysis suggests that this memorization might result from limited data, overparameterized models, and the underuse of structural priors specific to weight data. These findings highlight the need for more careful design and rigorous evaluation of generative models when applied to new domains.
           </p>
         </div>
       </div>
@@ -304,10 +308,10 @@
 
     <hr>
 
-    <!-- Understanding P-diff's Accuracy-Novelty Trade-off -->
+    <!-- P-diff Generates by Interpolation, Not Generalization -->
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h2 class="title is-5 has-text-centered">Understanding P-diff's Accuracy-Novelty Trade-off</h2>
+        <h2 class="title is-5 has-text-centered">P-diff Generates by Interpolation, Not Generalization</h2>
 
         <div class="content">
           <p>
@@ -358,27 +362,37 @@
 
     <hr>
 
-    <!-- Analysis -->
+    <!-- Understanding Memorization in Weight Generation -->
     <div class="columns is-centered">
       <div class="column is-full-width">
-        <h2 class="title is-3 has-text-centered">Analysis</h2>
+        <h2 class="title is-3 has-text-centered">Understanding Memorization in Weight Generation</h2>
+
+        <div class="content">
+          <p>
+            We further analyze these methods and find that limited data, overparameterized models, and the underuse of structural priors in weight data likely contribute to this memorization.
+          </p>
+        </div>
         
-        <!-- Impact of modeling factors on memorization -->
-        <h3 class="title is-4">Impact of modeling factors on memorization</h3>
+        <!-- Limited Data and Overparameterized Models -->
+        <h3 class="title is-4">Limited Data and Overparameterized Models</h3>
         <div class="content has-text-justified">
           <div style="text-align: center;">
-            <img src="./static/images/modeling_factors.png" style="max-width: 65%; height: auto;">
+            <img src="./static/images/scaling_data.png" style="max-width: 45%; height: auto;">
           </div>
           <p>
-            Using L<sub>2</sub> distance as a proxy for the novelty of generated weights,
-            and classification accuracy or minimum matching distance (MMD) to training shapes as measures of performance,
-            we find that modeling factor adjustments shown to reduce memorization in image diffusion do not alleviate the memorization issue in weight generation: none substantially improved novelty without degrading performance.
+            Scaling up data is a potential solution for memorization. Expanding the training dataset of G.pt from 2.1M to 20.4M checkpoints can effectively reduce memorization without degrading the performance of the generated weights.
+          </p>
+          <div style="text-align: center;">
+            <img src="./static/images/model_capacity.png" style="max-width: 45%; height: auto;">
+          </div>
+          <p>
+            Generative models of weights are overparameterized, enabling memorization. Even when the training checkpoints' weights are random initializations, HyperDiffusion can still memorize these weights without learning meaningful patterns.
           </p>
         </div>
         <!--/ Impact of modeling factors on memorization -->
         
-        <!-- Weight space symmetries -->
-        <h3 class="title is-4">Weight space symmetries</h3>
+        <!-- Underused Structural Priors in Weight Data -->
+        <h3 class="title is-4">Underused Structural Priors in Weight Data</h3>
 
         <div class="content">
           <p>
@@ -421,11 +435,11 @@
 <section class="section" id="BibTeX">
   <div class="container is-max-desktop content">
     <h2 class="title">BibTeX</h2>
-    <pre><code>@article{zeng2025generative,
+    <pre><code>@inproceedings{zeng2026generative,
   title={Generative Modeling of Weights: Generalization or Memorization?},
   author={Boya Zeng and Yida Yin and Zhiqiu Xu and Zhuang Liu},
-  journal={arXiv preprint arXiv:2506.07998},
-  year={2025},
+  booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+  year={2026},
 }</code></pre>
   </div>
 </section>
